@@ -41,3 +41,19 @@ ubuntu-build-demo:
 
 ubuntu-demo: ubuntu-with-cache ubuntu-build-demo
 	docker run --rm ubuntu-demo
+
+python-with-cache:
+	docker build \
+		-f Dockerfile.python-with-cache \
+		-t python-with-cache \
+		.
+
+python-build-demo:
+	docker build \
+    -f Dockerfile.python \
+    -t python-demo \
+    --build-arg PYPI_CACHE=192.168.1.35:8082 \
+	.
+
+python-demo: python-with-cache python-build-demo
+	docker run --rm python-demo

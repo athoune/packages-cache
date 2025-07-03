@@ -1,0 +1,12 @@
+FROM python:3.13-slim
+
+ONBUILD ARG PYPI_CACHE=""
+ONBUILD RUN if [ -z '$PYPI_CACHE' ] ; \
+    then \
+    echo 'No mirror'; \
+    else \
+    echo "[global]\n\
+    index-url = http://${PYPI_CACHE}/pypi\n\
+    trusted-host = $(echo ${PYPI_CACHE} | cut -d : -f 1)" \
+    > /etc/pip.conf ;\
+    fi

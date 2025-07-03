@@ -1,0 +1,7 @@
+FROM python-with-cache
+
+RUN python3 -m venv /demo \
+    && /demo/bin/pip install cowsay
+ENTRYPOINT ["/demo/bin/cowsay", \
+    "-c", "tux", \
+    "-t", "\"Welcome to the thunder dome\"" ]
