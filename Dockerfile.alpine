@@ -1,0 +1,5 @@
+FROM alpine-with-cache
+
+RUN apk add --no-cache figlet
+
+CMD ["figlet", "Carpe diem"]

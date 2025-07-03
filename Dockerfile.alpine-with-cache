@@ -1,0 +1,10 @@
+FROM alpine:latest
+
+ONBUILD ARG HTTP_PROXY=""
+ONBUILD RUN if [ -z '$HTTP_PROXY' ] ; \
+    then \
+    echo 'No mirror'; \
+    else \
+    sed -i 's/https/http/g' \
+    /etc/apk/repositories; \ 
+    fi

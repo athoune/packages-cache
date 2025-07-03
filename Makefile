@@ -73,3 +73,19 @@ node-build-demo:
 
 node-demo: node-with-cache node-build-demo
 	docker run --rm node-demo
+
+alpine-with-cache:
+	docker build \
+		-f Dockerfile.alpine-with-cache \
+		-t alpine-with-cache \
+		.
+
+alpine-build-demo:
+	docker build \
+    -f Dockerfile.alpine \
+    -t alpine-demo \
+    --build-arg HTT¨_PROXY=192.168.1.35:8082 \
+	.
+
+alpine-demo: alpine-with-cache alpine-build-demo
+	docker run --rm alpine-demo
