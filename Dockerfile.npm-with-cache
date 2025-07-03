@@ -1,0 +1,11 @@
+FROM node:24-alpine
+
+ONBUILD ARG NPM_CACHE=""
+ONBUILD RUN if [ -z '$NPM_CACHE' ] ; \
+    then \
+    echo 'No mirror'; \
+    else \
+    npm set proxy "http://${NPM_CACHE}/" --location global && \
+    npm set https-proxy "http://${NPM_CACHE}/" --location global &&\
+    npm set registry http://registry.npmjs.org/; \
+    fi
