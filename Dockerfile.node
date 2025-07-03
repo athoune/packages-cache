@@ -1,0 +1,9 @@
+FROM node-with-cache
+
+# npm should be somewhere, not /
+RUN mkdir -p /opt/demo \
+    && cd /opt/demo \
+    && npm --verbose install cowsay
+ENTRYPOINT ["/opt/demo/node_modules/.bin/cowsay", \
+    "-e", "xx", \
+    "\"With a little help from my friends\"" ]

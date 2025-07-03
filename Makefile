@@ -57,3 +57,19 @@ python-build-demo:
 
 python-demo: python-with-cache python-build-demo
 	docker run --rm python-demo
+
+node-with-cache:
+	docker build \
+		-f Dockerfile.npm-with-cache \
+		-t node-with-cache \
+		.
+
+node-build-demo:
+	docker build \
+    -f Dockerfile.node \
+    -t node-demo \
+    --build-arg NPM_CACHE=192.168.1.35:8082 \
+	.
+
+node-demo: node-with-cache node-build-demo
+	docker run --rm node-demo
