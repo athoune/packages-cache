@@ -1,0 +1,8 @@
+FROM debian-with-cache
+
+RUN apt-get update \
+    && apt-get install -y --no-install-suggests --no-install-recommends \
+    cowsay \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["/usr/games/cowsay", "Through the Looking-Glass"]

@@ -1,0 +1,10 @@
+FROM debian:bookworm-slim
+
+ONBUILD ARG APT_CACHE=""
+ONBUILD RUN if [ -z '$APT_CACHE' ] ; \
+    then \
+    echo 'No mirror'; \
+    else echo "Acquire::http::Proxy \"$APT_CACHE\";" \
+    > /etc/apt/apt.conf.d/cache.conf; \
+    fi
+

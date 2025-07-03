@@ -1,10 +1,43 @@
-nginx:
+
+cache-server:
 	mkdir -p data
-	docker run -ti --rm \
-		-v `pwd`/nginx.conf:/etc/nginx/nginx.conf \
-		-v `pwd`/data:/data \
-		-p 3421:80 \
+	docker run --rm \
+		-v `pwd`/nginx.conf:/etc/nginx/nginx.conf:ro \
+		-v `pwd`/data/cache:/data/cache \
+		-p 8082:80 \
 		nginx-subs
 
 build-nginx:
 	docker build --build-arg ENABLED_MODULES="subs-filter" -f Dockerfile.alpine -t nginx-subs .
+
+debian-with-cache:
+	docker build \
+		-f Dockerfile.debian-with-cache \
+		-t debian-with-cache \
+		.
+
+debian-build-demo:
+	docker build \
+    -f Dockerfile.debian \
+    -t debian-demo \
+    --build-arg APT_CACHE=http://192.168.1.35:8082/ \
+	.
+
+debian-demo: debian-with-cache debian-build-demo
+	docker run --rm debian-demo
+
+ubuntu-with-cache:
+	docker build \
+		-f Dockerfile.ubuntu-with-cache \
+		-t ubuntu-with-cache \
+		.
+
+ubuntu-build-demo:
+	docker build \
+    -f Dockerfile.ubuntu \
+    -t ubuntu-demo \
+    --build-arg APT_CACHE=http://192.168.1.35:8082/ \
+	.
+
+ubuntu-demo: ubuntu-with-cache ubuntu-build-demo
+	docker run --rm ubuntu-demo
