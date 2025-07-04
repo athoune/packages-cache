@@ -1,3 +1,10 @@
+ifeq ($(shell uname),Darwin)
+	SERVER_IP=$(shell ifconfig -v en0 | grep "inet " | cut -w -f 3)
+else
+	SERVER_IP=$(shell ip -f inet addr show docker0 | grep "inet " | sed -E "s#.*inet (.*)/.*#\1#g" )
+endif
+
+cache: build-cache cache-server
 
 cache-server:
 	mkdir -p data
@@ -7,8 +14,11 @@ cache-server:
 		-p 8082:80 \
 		nginx-subs
 
-build-nginx:
-	docker build --build-arg ENABLED_MODULES="subs-filter" -f Dockerfile.alpine -t nginx-subs .
+build-cache:
+	docker build \
+	--build-arg ENABLED_MODULES="subs-filter" \
+	-t nginx-subs  \
+	https://raw.githubusercontent.com/nginx/docker-nginx/refs/heads/master/mainline/alpine/Dockerfile
 
 debian-with-cache:
 	docker build \
@@ -20,7 +30,7 @@ debian-build-demo:
 	docker build \
     -f Dockerfile.debian \
     -t debian-demo \
-    --build-arg APT_CACHE=http://192.168.1.35:8082/ \
+    --build-arg APT_CACHE=http://$(SERVER_IP):8082/ \
 	.
 
 debian-demo: debian-with-cache debian-build-demo
@@ -36,7 +46,7 @@ ubuntu-build-demo:
 	docker build \
     -f Dockerfile.ubuntu \
     -t ubuntu-demo \
-    --build-arg APT_CACHE=http://192.168.1.35:8082/ \
+    --build-arg APT_CACHE=http://$(SERVER_IP):8082/ \
 	.
 
 ubuntu-demo: ubuntu-with-cache ubuntu-build-demo
@@ -52,7 +62,7 @@ python-build-demo:
 	docker build \
     -f Dockerfile.python \
     -t python-demo \
-    --build-arg PYPI_CACHE=192.168.1.35:8082 \
+    --build-arg PYPI_CACHE=$(SERVER_IP):8082 \
 	.
 
 python-demo: python-with-cache python-build-demo
@@ -68,7 +78,7 @@ node-build-demo:
 	docker build \
     -f Dockerfile.node \
     -t node-demo \
-    --build-arg NPM_CACHE=192.168.1.35:8082 \
+    --build-arg NPM_CACHE=$(SERVER_IP):8082 \
 	.
 
 node-demo: node-with-cache node-build-demo
@@ -84,8 +94,10 @@ alpine-build-demo:
 	docker build \
     -f Dockerfile.alpine \
     -t alpine-demo \
-    --build-arg HTT¨_PROXY=192.168.1.35:8082 \
+    --build-arg HTT¨_PROXY=$(SERVER_IP):8082 \
 	.
 
 alpine-demo: alpine-with-cache alpine-build-demo
 	docker run --rm alpine-demo
+
+demo: debian-demo ubuntu-demo python-demo node-demo alpine-demo
