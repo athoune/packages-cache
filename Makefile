@@ -11,7 +11,7 @@ cache-server:
 	docker run --rm \
 		-v `pwd`/nginx.conf:/etc/nginx/nginx.conf:ro \
 		-v `pwd`/data/cache:/data/cache \
-		-p 8082:80 \
+		-p $(SERVER_IP):8082:80 \
 		nginx-subs
 
 build-cache:
