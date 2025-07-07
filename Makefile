@@ -18,7 +18,7 @@ build-cache:
 	docker build \
 	--build-arg ENABLED_MODULES="subs-filter" \
 	-t nginx-subs  \
-	https://raw.githubusercontent.com/nginx/docker-nginx/refs/heads/master/mainline/alpine/Dockerfile
+	https://raw.githubusercontent.com/nginx/docker-nginx/refs/heads/master/modules/Dockerfile.alpine
 
 debian-with-cache:
 	docker build \
