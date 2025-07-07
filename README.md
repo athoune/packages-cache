@@ -6,7 +6,7 @@ Specificities of `docker build` with cache are explained.
 
 This configurations files are bare bone.
 Do not use it in production as is.
-Use YOUR settings, and test with YOUR projects to build.
+Use YOUR settings, and test it with YOUR projects.
 
 ## Demo time
 
