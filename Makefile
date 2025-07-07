@@ -94,7 +94,7 @@ alpine-build-demo:
 	docker build \
     -f Dockerfile.alpine \
     -t alpine-demo \
-    --build-arg HTT¨_PROXY=$(SERVER_IP):8082 \
+    --build-arg HTTP_PROXY=$(SERVER_IP):8082 \
 	.
 
 alpine-demo: alpine-with-cache alpine-build-demo
